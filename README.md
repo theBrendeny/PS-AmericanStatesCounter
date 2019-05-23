@@ -5,6 +5,9 @@ Context: Still learning how to use PS and making this is a learning process as w
 
 Project link: https://github.com/users/theBrendeny/projects/1
 
+# Instructions if new to Powershell
+Download the file, right click and select "Run with Powershell"
+
 # TODO
 Fix error:
   If there is only 1 American state named, the Object is converted to a String
