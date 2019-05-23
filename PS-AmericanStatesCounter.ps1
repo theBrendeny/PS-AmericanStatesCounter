@@ -47,17 +47,12 @@ $statesTemp = @()
 
 ## Tells the user the states they have named and counted
 function Validate-States () {
-    
-    if (Get-Count -eq 50){
-        
-        ## End the game if the user named all 50 states
-        End-Game
 
-    }
-
-    Write-Host "Here are the states you have named:"
+    Write-Host "Here are the states you have named:`n"
     Get-States
-    Write-Host "You have currently named: " + (Get-Count) + " states!"
+    Write-Host "`nYou have currently named:"(Get-Count)"states!"
+
+    $statesTemp.count()
 
 }
 
@@ -70,9 +65,9 @@ function Display-Missing-States () {
 
     }
 
-    Write-Host "Here are the states you missed:"
+    Write-Host "`nHere are the states you missed:"
     Get-Missing-States
-    Write-Host "`nYou missed " + (Get-Missing-Count) + " states!"
+    Write-Host "`nYou missed"(Get-Missing-Count)"states!"
 
 }
 
@@ -222,12 +217,13 @@ function End-Game () {
 ## Post game to display any missing states
 function Post-Game () {
 
-    $input = Read-Host "Do you want to know what states you missed? (Y/N)"
+    $input = Read-Host "`nDo you want to know what states you missed? (Y/N)"
     
     switch ($input) {
     
         Y { Display-Missing-States }
         N { exit                   }
+        ##need to have an else or something to control other inputs
     
     }
 
