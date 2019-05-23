@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Script that counts how many American states the user correctly inputs and gives a letter grade upon finishing
+  Script that counts how many American states the user correctly inputs and gives results upon finishing
 .DESCRIPTION
   Compares an array of states with an instance array to see how many states were named
   Turns the count into a percentage which is then converted into a letter grade
@@ -14,10 +14,6 @@
   Version:        1.0
   Author:         theBrendeny | https://github.com/theBrendeny
   Creation Date:  22/05/2019
-  Purpose/Change: None
-  
-.EXAMPLE
-  <Example goes here. Repeat this attribute for more than one example>
 #>
 
 #---------------------------------------------------------[Initialisations]--------------------------------------------------------
@@ -44,30 +40,39 @@ $states = @(
     "West Virginia", "Wisconsin", "Wyoming"
 )
 
-## Instance array to be compared with $states
-[Object[]]$statesTemp = @()
-
-## Test array until I fix the proper empty one
-$statesTempTest = @("Wisconsin", "Missouri", "Texas",
-                    "Maine", "Virginia", "Hi there"
-                    )
+## Instance array
+$statesTemp = @()
 
 #-----------------------------------------------------------[Functions]------------------------------------------------------------
 
+## Tells the user the states they have named and counted
 function Validate-States () {
+    
+    if (Get-Count -eq 50){
+        
+        ## End the game if the user named all 50 states
+        End-Game
 
-    #$contains = $states | Where {$statesTemp -contains $_}
-    #Write-Host $contains
+    }
 
-    $states.getType()
-    $states.Length
-    $statesTemp.getType()
-    $statesTemp.Length
-
-    cls
-
+    Write-Host "Here are the states you have named:"
     Get-States
-    Get-Count
+    Write-Host "You have currently named: " + (Get-Count) + " states!"
+
+}
+
+## Tells the user how many states they missed and counted
+function Display-Missing-States () {
+
+    if (Get-Count -eq 50) {
+    
+        Write-Host "You got all 50 states! You aren't missing any!"
+
+    }
+
+    Write-Host "Here are the states you missed:"
+    Get-Missing-States
+    Write-Host "`nYou missed " + (Get-Missing-Count) + " states!"
 
 }
 
@@ -102,44 +107,76 @@ function Get-Grade () {
 
 }
 
-## Returns score in percentage value
+## Returns the score in percentage value
 function Get-Score () {
 
     Convert-Score($count)
 
 }
 
-## Returns the score by counted states
+## Returns the number of states stored in the instance array
 function Get-Count () {
 
     Set-Count($count)
 
 }
 
+## Returns the number of missing states stored in the instance array
+function Get-Missing-Count () {
+
+    Set-Missing-Count($missingCount)
+
+}
+
+## Returns the states stored in the instance array
 function Get-States () {
 
     Set-States($count)
 
 }
 
-#-----------------------------------------------------------[Set methods]---------------------------------------------------------
+## Returns the missing states stored in the instance array
+function Get-Missing-States () {
 
-## Sets the number of counted states
-function Set-Count () {
-
-    ## Filters out words that aren't American states
-    $count = $states | Where {$statesTempTest -contains $_}
-    $statesIn = $count
-    return $count.Length ## Returns number of American states named
+    Set-Missing-States($missingCount)
 
 }
 
+#-----------------------------------------------------------[Set methods]---------------------------------------------------------
+
+## Sets the number of states stored in the instance array
+function Set-Count () {
+
+    $count = $states | Where {$statesTemp -contains $_}
+    $statesIn = $count
+    return $count.Length 
+
+}
+
+# Sets the number of missing states stored in the instance array
+function Set-Missing-Count () {
+
+    $missingCount = $states | Where {$statesTemp -notcontains $_}
+    $statesIn = $missingCount
+    return $missingCount.Length 
+
+}
+
+## Sets the name of states stored in the instance array
 function Set-States () {
 
-    ## Filters out words that aren't American states
-    $count = $states | Where {$statesTempTest -contains $_}
+    $count = $states | Where {$statesTemp -contains $_}
     $statesIn = $count
-    return $statesIn ## Returns names of American states named
+    return $statesIn
+
+}
+
+## Sets the name of missing states stored in the instance array
+function Set-Missing-States () {
+
+    $missingCount = $states | Where {$statesTemp -notcontains $_}
+    $statesOut = $missingCount
+    return $statesOut
 
 }
 
@@ -163,7 +200,8 @@ function Start-Game () {
             Validate-States
         }
 
-        $statesTemp += $input
+        ## Passes the string as an object to the array
+        $script:statesTemp += $input
 
     }
 
@@ -177,9 +215,25 @@ function End-Game () {
                "Score in percentage: " + (Get-Score) + "%`n"
 
     Get-Grade
+    Post-Game
 
 }
 
+## Post game to display any missing states
+function Post-Game () {
+
+    $input = Read-Host "Do you want to know what states you missed? (Y/N)"
+    
+    switch ($input) {
+    
+        Y { Display-Missing-States }
+        N { exit                   }
+    
+    }
+
+}
+
+## Main method
 function main () {
 
 Write-Host 
