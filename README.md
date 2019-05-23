@@ -3,7 +3,7 @@ A little PowerShell script that lets the user guess as many American states as t
 
 Context: Still learning how to use PS and making this is a learning process as well as good fun.
 
-Project link: https://github.com/users/theBrendeny/projects/1
+Project link: https://github.com/theBrendeny/PS-AmericanStatesCounter/projects
 
 # Instructions if new to Powershell
 Download the file, right click and select "Run with Powershell"
