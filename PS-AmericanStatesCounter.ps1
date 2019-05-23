@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Script that counts how many American states the user correctly inputs and gives a letter grade upon finishing
 .DESCRIPTION
@@ -47,6 +47,11 @@ $states = @(
 ## Instance array to be compared with $states
 [Object[]]$statesTemp = @()
 
+## Test array until I fix the proper empty one
+$statesTempTest = @("Wisconsin", "Missouri", "Texas",
+                    "Maine", "Virginia", "Hi there"
+                    )
+
 #-----------------------------------------------------------[Functions]------------------------------------------------------------
 
 function Validate-States () {
@@ -58,6 +63,11 @@ function Validate-States () {
     $states.Length
     $statesTemp.getType()
     $statesTemp.Length
+
+    cls
+
+    Get-States
+    Get-Count
 
 }
 
@@ -106,13 +116,30 @@ function Get-Count () {
 
 }
 
+function Get-States () {
+
+    Set-States($count)
+
+}
+
 #-----------------------------------------------------------[Set methods]---------------------------------------------------------
 
 ## Sets the number of counted states
 function Set-Count () {
 
-    $count = 35
-    return $count
+    ## Filters out words that aren't American states
+    $count = $states | Where {$statesTempTest -contains $_}
+    $statesIn = $count
+    return $count.Length ## Returns number of American states named
+
+}
+
+function Set-States () {
+
+    ## Filters out words that aren't American states
+    $count = $states | Where {$statesTempTest -contains $_}
+    $statesIn = $count
+    return $statesIn ## Returns names of American states named
 
 }
 
